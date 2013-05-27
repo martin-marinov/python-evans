@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="user-page">
+        <h1>{{current_user.name}}</h1>
+        {% if user.is_staff or user == current_user %}
+            <p class="faculty-number">(№{{current_user.faculty_number}})</p>
+        {% endif %}
+        {% include "evans_avatar.html" with user=current_user %}
+        {% if current_user.github %}
+            <dl>
+                <dt>GitHub</dt>
+                <dd><a href="https://github.com/{{current_user.github}}">
+                    {{current_user.github}}
+                </a></dd>
+            </dl>
+        {% endif %}
+        {% if current_user.twitter %}
+            <dl>
+                <dt>Twitter</dt>
+                <dd><a href="http://twitter.com/#{{current_user.github}}">
+                    {{current_user.twitter}}
+                </a></dd>
+            </dl>
+        {% endif %}
+        {% if current_user.skype and user.is_authenticated %}
+            <dl>
+                <dt>Skype</dt>
+                <dd>{{current_user.skype}}</dd>
+            </dl>
+        {% endif %}
+        {% if current_user.site%}
+            <dl>
+                <dt>Сайт</dt>
+                <dd><a href="{{current_user.site}}">
+                    {{current_user.site}}
+                </a></dd>
+            </dl>
+        {% endif %}
+        {% if user.is_staff %}
+            <dl>
+                <dt>Поща</dt>
+                <dd>{{current_user.email}}</dd>
+            </dl>
+
+            <dl>
+                <dt>За вас</dt>
+                <dd>{{current_user.about}}</dd>
+            </dl>
+        {% endif %}
+        {% if user.is_authenticated and user == current_user %}
+            <p><a href="{% url 'users.views.profile-edit' %}" class="action">Редактирай</a></p>
+        {% endif %}
+    </div>
+{% endblock content %}

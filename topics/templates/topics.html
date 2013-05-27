@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Форуми</h1>
+{% if user.is_authenticated %}
+    <p>
+        <a href="{% url 'topics.views.topic-create' %}" class="action">
+            Нова тема
+        </a>
+    </p>
+{% endif %}
+<table class='topics'>
+<thead>
+<tr>
+<th>Тема</th>
+<th>Отговори</th>
+<th>Последен отговор</th>
+</tr>
+</thead>
+<tbody>
+    {% for topic in topics %}
+        <tr>
+            <td>
+                <a href="{% url 'topics.views.common.topic-reply-detail' topic.pk %}">{{ topic.title }}</a></td>
+            <td>{{ topic.replies.count }}</td>
+            <td class='last-reply'>
+                <a href="{% url 'topics.views.common.last-post' topic.pk %}">
+                    <time datetime='{{ topic.last_post.updated_at|date:"c"}}' pubdate>
+                        {{ topic.last_post.updated_at|date:"d.m.Y H:i"}}
+                    </time>
+                </a>от
+                <a href="">{{ topic.last_post.author.name }}</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% if is_paginated %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a class="previous_page" rel="prev start" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.previous_page_number }}">&#8592;</a>
+            {% else %}
+                <span class="previous_page disabled">&#8592;</span>
+            {% endif %}
+            <em class="current">{{ page_obj.number }}</em>
+            {% if page_obj.has_next %}
+                <a rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a> <a class="next_page" rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">&#8594;</a>
+            {% else %}
+                <span class="previous_page disabled">&#8594;</span>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock content %}

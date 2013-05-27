@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Програмиране с Python</title>
+<meta charset='utf-8'>
+<link href='/static/python-favicon.png' rel='icon' type='image/png' />
+{% block CSS %}
+<link href="/static/site.css" media="screen" rel="stylesheet" type="text/css" />
+{% endblock %}
+<script src="/static/main.js" type="text/javascript"></script>
+<meta content="authenticity_token" name="csrf-param" />
+</head>
+<body>
+<header>
+<a href="/" class="logo"><img alt="Logo" src="/static/python-logo.png" /></a>
+<div class='tip-of-the-day'><a href="/tips/8">assert-и извън тестове</a></div>
+
+<h1>Програмиране с Python</h1>
+<h2>
+Курс във Факултета по Математика и Информатика към
+<abbr title='Софийски Университет'>СУ</abbr>
+</h2>
+<nav>
+{% if user.is_authenticated %}
+    <ul>
+        <li>Здрасти, <a href="{% url 'users.views.profile-edit' %}">{{ user.name }}</a></li>
+        <li><a href="{% url 'accounts.views.logout' %}">Изход</a></li>
+    </ul>
+{% else %}
+    <ul>
+        <li><a href="{% url 'accounts.views.login' %}">Вход</a></li>
+        <li><a href="{% url 'accounts.views.registration' %}">Регистрация</a></li>
+    </ul>
+{% endif %}
+</nav>
+</header>
+<nav>
+<ul>
+<li><a href="/">Начало</a></li>
+{% if user.is_authenticated %}
+    <li><a href="/dashboard">Табло</a></li>
+{% endif %}
+<li><a href="/announcements">Новини</a></li>
+<li><a href="/lectures">Материали</a></li>
+<li><a href="/tasks">Задачи</a></li>
+<li><a href="/challenges">Предизвикателства</a></li>
+<li><a href="/tips">Хитринки</a></li>
+<li><a href="/topics">Форуми</a></li>
+<li><a href="/users">Потребители</a></li>
+</ul>
+</nav>
+<div id='container'>
+<div class='main'>
+{% if messages %}
+    {% for message in messages %}
+        <div class="flash notice">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+{%block content %} {% endblock %}
+</div>
+<footer>
+<a href="#">Някои права запазени</a>
+</footer>
+</div>
+
+
+</body>
+</html>

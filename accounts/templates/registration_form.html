@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<h1>Регистрация</h1>
+<form accept-charset="UTF-8" action="" class="simple_form new_registration" id="new_registration" method="post">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <p class="error_notification">
+            Регистрацията ви беше неуспешна. Сигурни ли сте, че въведохте правилните данни?
+        </p>
+    {% endif %}
+    <p>
+    Малко по-надолу ще намерите форма, с която да си създадете акаунт в сайта на курса. Трябва да
+    въведете <strong>три имена</strong>, факултетен номер и <strong>валиден email адрес</strong>.
+    Няма да го публикуваме или разпространяваме по никакъв начин. Няма и да ви изпращаме каквито и
+    да било автоматични писма, освен тези за регистрация и новини. Моля дайте адрес, който
+    проверявате. Административни грешки са ставали в миналото и е по-добре да ви уведомим бързичко,
+    отколкото да разберете когато вече е твърде късно.
+    </p>
+    <p>
+    Ако сте въвели валидно име и факултетен номер, ще получите писмо, с което да потвърдите адреса
+    си. Отворете линка и сте готови - имате потребител на сайта.
+    </p>
+    <p>
+    Ако сте записали курса с молба или не сте студент във ФМИ, но посещавате събиранията, има
+    голям шанс да нямаме вашето име и факултетен номер. Ако имате проблем с регистрацията,
+    моля <a href="mailto:fmi@py-bg.net">пишете ни</a>.
+    </p>
+    {% with WIDGET_REQUIRED_CLASS='required' %}
+        {% include "evans_CharField.html" with field=form.name %}
+        {% include "evans_CharField.html" with field=form.faculty_number|attr:"type:number" %}
+        {% include "evans_CharField.html" with field=form.email|add_class:"email" %}
+        {% include "evans_CharField.html" with field=form.password1|add_class:"password" %}
+        {% include "evans_CharField.html" with field=form.password2|add_class:"password" %}
+    {% endwith %}
+    <input name="commit" type="submit" value="Регистрирай ме" />
+</form>
+{% endblock content %}

@@ -1,0 +1,11 @@
+{# evans_field.html #}
+{% load widget_tweaks %}
+<div class="input string optional">
+    {{ field.label_tag }}
+    {% render_field field|add_class:"string" %}
+    {% if field.help_text %}
+        <span class="hint">
+            {{field.help_text}}
+        </span>
+    {% endif %}
+</div>

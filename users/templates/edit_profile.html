@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<form accept-charset="UTF-8" action="" class="simple_form edit_user" enctype="multipart/form-data" id="edit_user_50" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Снимка</legend>
+        <p>
+            Форумите са много по-приятни, когато виждате лицата на участниците, а не всевъзможни аниме герои.
+            Ако ще качвате снимка, нека да бъде <strong>истинска и да се разпознавате ясно на нея.</strong>
+            Ще махаме останалите.
+        </p>
+        {% include "evans_avatar.html" with user=user %}
+        {% include "evans_BooleanField.html" with field=form.should_remove_avatar %}
+        <p>Или качи друга:</p>
+        <p>{{form.avatar}}</p>
+    </fieldset>
+    <fieldset>
+        <legend>Малко лична информация за вас</legend>
+            {% include "evans_EditField.html" with field=form.github %}
+            {% include "evans_EditField.html" with field=form.twitter %}
+            {% include "evans_EditField.html" with field=form.skype %}
+            {% include "evans_EditField.html" with field=form.phone_number|attr:"type:tel" %}
+            {% include "evans_EditField.html" with field=form.site|attr:"type:url" %}
+            {% include "evans_EditField.html" with field=form.about|attr:"cols:50"|attr:"rows:5" %}
+    <fieldset>
+        <legend>Известия по поща</legend>
+        {% include "evans_BooleanField.html" with field=form.subscribed %}
+    </fieldset>
+    <fieldset>
+        <legend>Промяна на парола</legend>
+            <p>Ако не искате да променяте паролата си, оставете долните полета празни:</p>
+            {% include "evans_CharField.html" with field=form.password1|add_class:"password" %}
+            {% include "evans_CharField.html" with field=form.password2|add_class:"password" %}
+    </fieldset>
+    <input class="button" name="commit" type="submit" value="Запази">
+</form>
+
+{% endblock content %}

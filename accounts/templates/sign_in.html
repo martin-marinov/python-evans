@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    {% if form.non_field_errors %}
+        <div class="flash alert">Невалидна е-поща или парола.</div>
+    {% endif %}
+<h1>Вход</h1>
+<p>За да влезете в системата, трябва първо да сте се
+    <a href="{% url 'accounts.views.registration' %}">
+        регистрирали
+    </a>.
+</p>
+<form accept-charset="UTF-8" action="" class="simple_form new_user" id="new_user" method="post">
+    {% csrf_token %}
+    {% include "evans_CharField.html" with field=form.username|add_class:"email"|attr:"email" %}
+    {% include "evans_CharField.html" with field=form.password|add_class:"password" %}
+    {% include "evans_BooleanField.html" with field=form.remember_me %}
+<input name="commit" type="submit" value="Влез">
+</form>
+{% endblock content %}

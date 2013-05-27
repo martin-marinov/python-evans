@@ -1,0 +1,5 @@
+{% load widget_tweaks %}
+    <div class="input boolean optional">
+        {% render_field field|add_class:"boolean" %}
+        {{ field.label_tag }}
+    </div>

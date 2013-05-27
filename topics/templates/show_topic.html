@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ topic.title }}</h1>
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="previous_page" rel="prev start" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.previous_page_number }}">&#8592;</a>
+        {% else %}
+            <span class="previous_page disabled">&#8592;</span>
+        {% endif %}
+        <em class="current">{{ page_obj.number }}</em>
+        {% if page_obj.has_next %}
+            <a rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a> <a class="next_page" rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">&#8594;</a>
+        {% else %}
+            <span class="previous_page disabled">&#8594;</span>
+        {% endif %}
+    </div>
+{% endif %}
+
+<ol class='topic'>
+    <li>
+        <article data-starred='false' id='topic_{{ topic.pk }}'>
+            <aside>
+                <a href="">
+                    <img alt="{{ topic.author.name }}" src="/uploads/photos/72/size150_photo.jpg" />
+                </a>
+                <a href="">
+                    {{ topic.author.name }}
+                </a>
+            </aside>
+            <div class='body'>
+                <p>{{ topic.body }}</p>
+            </div>
+            <div class='published-at'>
+                <a href="{% url 'topics.views.post-view' topic.pk %}" class="permalink" title="Трайна връзка">
+                    Публикувано преди
+                    <time datetime='{{ topic.created_at|date:"c"}}'>
+                        {{ topic.created_at|timesince }}
+                    </time>
+                </a>
+            </div>
+        </article>
+    </li>
+
+{% for reply in topic.replies.all %}
+    <li>
+        <article data-starred='false' id='reply_{{ reply.pk }}'>
+            <aside>
+                <a href="">
+                    <img alt="{{ reply.author.name }}" src="/uploads/photos/72/size150_photo.jpg" />
+                </a>
+                <a href="">
+                    {{ reply.author.name }}
+                </a>
+            </aside>
+            <div class='body'>
+                <p>{{ reply.body }}</p>
+            </div>
+            <div class='published-at'>
+                <a href="{% url 'topics.views.post-view' reply.pk %}" class="permalink" title="Трайна връзка">
+                    Публикувано преди
+                    <time datetime='{{ reply.created_at|date:"c"}}'>
+                        {{ reply.created_at|timesince }}
+                    </time>
+                </a>
+            </div>
+        </article>
+    </li>
+{% endfor %}
+</ol>
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="previous_page" rel="prev start" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.previous_page_number }}">&#8592;</a>
+        {% else %}
+            <span class="previous_page disabled">&#8592;</span>
+        {% endif %}
+        <em class="current">{{ page_obj.number }}</em>
+        {% if page_obj.has_next %}
+            <a rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a> <a class="next_page" rel="next" href="{% url 'topics.views.topics-list' %}?page={{ page_obj.next_page_number }}">&#8594;</a>
+        {% else %}
+            <span class="previous_page disabled">&#8594;</span>
+        {% endif %}
+    </div>
+{% endif %}
+{% if user.is_authenticated %}
+    <div class='new-reply'>
+        <h2>Отговорете на темата</h2>
+        <form accept-charset="UTF-8" action="" class="simple_form new_reply" id="new_reply" method="post">
+            {% csrf_token %}
+            <div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" />
+            </div>
+
+            <div class="input text required">
+                <label class="text required" for="reply_body">Отговор 
+                    <abbr title="required">*</abbr>
+                </label>
+                <textarea class="text required" cols="40" id="reply_body" name="body" required="required" rows="20"></textarea>
+            </div>
+            <p class='markdown-explanation'>
+                Форумите се форматират с <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>.
+                Той конвертира текст до HTML. Ползва се много в open source community-то (и в частност, Ruby
+                community-то). Добре е да го знаете. Може да ползвате <a href="http://www.emoji-cheat-sheet.com">Emoji</a>
+                емотикони, ако искате да бъдете по-графични.
+            </p>
+            <input class="button" name="commit" type="submit" value="Отговори" />
+        </form>
+    </div>
+{% else %}
+    <p class="requires-authentication">
+        Трябва да сте влезли в системата, за да може да отговаряте на теми.
+    </p>
+{% endif %}
+{% endblock content %}

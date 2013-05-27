@@ -1,0 +1,85 @@
+import os
+from django.db import models
+from django.contrib.auth.models import (
+    BaseUserManager,
+    AbstractBaseUser
+)
+from accounts.storage import OverwriteStorage
+
+
+class UserProfileManager(BaseUserManager):
+    def create_user(self, email, name, faculty_number, password=None):
+        """
+        Creates and saves a UserProfile with the given email,
+        name, faculty_number and password.
+        """
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        user = self.model(email=UserProfileManager.normalize_email(email),
+                          name=name,
+                          faculty_number=faculty_number
+                          )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, name, faculty_number, password):
+        """
+        Creates and saves a superuser with the given email,
+        name, faculty_number and password.
+        """
+        user = self.create_user(email=email,
+                                name=name,
+                                faculty_number=faculty_number,
+                                password=password,
+                                )
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+
+def get_avatar_path(instance, filename):
+    return os.path.join('photos', str(instance.id) + ".png")
+
+
+class UserProfile(AbstractBaseUser):
+    email = models.EmailField(verbose_name='email',
+                              max_length=255,
+                              unique=True,
+                              db_index=True)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    #Custom
+    faculty_number = models.PositiveIntegerField(unique=True)
+    points = models.PositiveSmallIntegerField(default=0)
+    name = models.CharField(max_length=255)
+    avatar = models.ImageField(upload_to=get_avatar_path, blank=True, storage=OverwriteStorage())
+    #Custom non-required
+    github = models.CharField(max_length=255, blank=True, default='')
+    twitter = models.CharField(max_length=255, blank=True, default='')
+    skype = models.CharField(max_length=255, blank=True, default='')
+    phone_number = models.CharField(max_length=255, blank=True, default='')
+    site = models.CharField(max_length=255, blank=True, default='')
+    about = models.TextField(blank=True, default='')
+    subscribed = models.BooleanField(default=True)
+
+    objects = UserProfileManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['faculty_number', 'name']
+
+    class Meta:
+        app_label = 'accounts'
+
+    def __unicode__(self):
+        return self.email
+
+    def get_absolute_url(self):
+        return reverse('user-details', kwargs={'pk': self.pk})
+
+    # Admin required fields
+    @property
+    def is_staff(self):
+        return self.is_admin
