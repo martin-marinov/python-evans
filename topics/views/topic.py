@@ -1,19 +1,35 @@
 from topics.models import Topic
-from topics.forms import TopicForm
-from django.views.generic import ListView, DetailView, CreateView
+from topics.forms import TopicForm, ReplyForm
+from topics import TOPICS_PER_PAGE, REPLIES_PER_PAGE
+from django.views.generic import ListView, CreateView
+from django.views.generic.detail import SingleObjectMixin
+from django.db.models import Max
 
 
 class TopicsListView(ListView):
     model = Topic
-    paginate_by = 30
+    paginate_by = TOPICS_PER_PAGE
     template_name = 'topics.html'
     context_object_name = 'topics'
 
+    def get_queryset(self):
+        queryset = super(TopicsListView, self).get_queryset()
+        queryset = queryset.annotate(Max('replies__created_at')).order_by('-replies__created_at__max')
+        return queryset
 
-class TopicDetailView(DetailView):
-    model = Topic
+
+class TopicDetailView(SingleObjectMixin, ListView):
     template_name = 'show_topic.html'
-    context_object_name = 'topic'
+    paginate_by = REPLIES_PER_PAGE
+
+    def get_context_data(self, **kwargs):
+        kwargs['topic'] = self.object
+        kwargs['form'] = ReplyForm()
+        return super(TopicDetailView, self).get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.object = self.get_object(Topic.objects.all())
+        return self.object.replies.all()
 
 
 class TopicCreateView(CreateView):

@@ -29,7 +29,7 @@ class RegistrationForm(forms.ModelForm):
     faculty_number = forms.IntegerField(label='Факултетен номер',
                                         error_messages={'required': 'Необходимо е да въведете факултетен номер.',
                                                         'invalid': 'Факултетният номер е неотрицателно число.'})
-    name = forms.CharField(label='Име',
+    name = forms.CharField(label='Трите имена',
                            error_messages={'required': 'Необходимо е да въведете имената си.'})
 
     class Meta:

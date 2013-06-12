@@ -25,11 +25,11 @@
             <td>{{ topic.replies.count }}</td>
             <td class='last-reply'>
                 <a href="{% url 'topics.views.common.last-post' topic.pk %}">
-                    <time datetime='{{ topic.last_post.updated_at|date:"c"}}' pubdate>
-                        {{ topic.last_post.updated_at|date:"d.m.Y H:i"}}
+                    <time datetime='{{ topic.last_post.created_at|date:"c"}}' pubdate>
+                        {{ topic.last_post.created_at|date:"d.m.Y H:i"}}
                     </time>
                 </a>от
-                <a href="">{{ topic.last_post.author.name }}</a>
+                <a href="">{{ topic.last_post.author.shorten_name }}</a>
             </td>
         </tr>
     {% endfor %}

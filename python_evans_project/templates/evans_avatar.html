@@ -1,7 +1,7 @@
 {# evans_field.html #}
 {% load widget_tweaks %}
 {% if user.avatar %}
-    <img alt="{{user.name}}" src="{{user.avatar.url}}" width="150" height="150">
+    <img alt="{{user.shorten_name}}" src="{{user.avatar.url}}" width="150" height="150">
 {% else %}
-    <img alt="{{user.name}}" src="/static/photoless_user.png" width="150" height="150">
+    <img alt="{{user.shorten_name}}" src="/static/photoless_user.png" width="150" height="150">
 {% endif %}

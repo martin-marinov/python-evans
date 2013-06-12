@@ -2,7 +2,7 @@
 
 {% block content %}
     <div id="user-page">
-        <h1>{{current_user.name}}</h1>
+        <h1>{{current_user.shorten_name}}</h1>
         {% if user.is_staff or user == current_user %}
             <p class="faculty-number">(№{{current_user.faculty_number}})</p>
         {% endif %}

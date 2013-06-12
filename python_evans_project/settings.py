@@ -93,6 +93,13 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # default
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+ANONYMOUS_USER_ID = -1
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,6 +135,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django_extensions',
     'widget_tweaks',
+    'guardian',
     'accounts',
     'users',
     'registration',

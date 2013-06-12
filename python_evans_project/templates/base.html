@@ -23,7 +23,7 @@
 <nav>
 {% if user.is_authenticated %}
     <ul>
-        <li>Здрасти, <a href="{% url 'users.views.profile-edit' %}">{{ user.name }}</a></li>
+        <li>Здрасти, <a href="{% url 'users.views.profile-edit' %}">{{ user.shorten_name }}</a></li>
         <li><a href="{% url 'accounts.views.logout' %}">Изход</a></li>
     </ul>
 {% else %}
@@ -53,7 +53,11 @@
 <div class='main'>
 {% if messages %}
     {% for message in messages %}
-        <div class="flash notice">{{ message }}</div>
+        {% if 'success' in message.tags %}
+            <div class="flash notice">{{ message }}</div>
+        {% elif 'error' in message.tags %}
+            <div class="flash alert">{{ message }}</div>
+        {% endif %}
     {% endfor %}
 {% endif %}
 {%block content %} {% endblock %}

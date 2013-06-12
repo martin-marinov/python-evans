@@ -1,8 +1,11 @@
 import os
+import re
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import (
     BaseUserManager,
-    AbstractBaseUser
+    AbstractBaseUser,
+    PermissionsMixin
 )
 from accounts.storage import OverwriteStorage
 
@@ -44,13 +47,14 @@ def get_avatar_path(instance, filename):
     return os.path.join('photos', str(instance.id) + ".png")
 
 
-class UserProfile(AbstractBaseUser):
+class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email',
                               max_length=255,
                               unique=True,
                               db_index=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    registered_at = models.DateTimeField(auto_now_add=True, editable=False)
     #Custom
     faculty_number = models.PositiveIntegerField(unique=True)
     points = models.PositiveSmallIntegerField(default=0)
@@ -72,12 +76,25 @@ class UserProfile(AbstractBaseUser):
 
     class Meta:
         app_label = 'accounts'
+        ordering = ['registered_at']
 
     def __unicode__(self):
         return self.email
 
+    @property
+    def shorten_name(self):
+        match = re.search("(?P<first_name>\S+).* (?P<last_name>\S+)$", self.name)
+        return ' '.join(match.group('first_name', 'last_name'))
+
+    @property
+    def first_name(self):
+        try:
+            return self.name.split(' ')[0]
+        except IndexError:
+            return None
+
     def get_absolute_url(self):
-        return reverse('user-details', kwargs={'pk': self.pk})
+        return reverse('users.views.user-detail', kwargs={'pk': self.pk})
 
     # Admin required fields
     @property

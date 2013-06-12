@@ -10,6 +10,7 @@ class PostView(SingleObjectMixin, RedirectView):
             post = self.get_object()
             ## Follows a dirty hack, which tries to avoid the usage of third
             ## party libraries to access child models from the parent model.
+            ## The same is done in the original(Ruby) evanse
             try:
                 # The post is of type 'Topic', call it's url
                 url = post.topic.get_absolute_url()
