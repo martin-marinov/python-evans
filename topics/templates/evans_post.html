@@ -1,0 +1,24 @@
+{% load custom_filters %}
+<li>
+    <article data-starred='{{post|is_starred}}' id='{{post|classname}}_{{ post.pk }}'>
+        <aside>
+            <a href="{{post.author.get_absolute_url}}">
+                {% include "evans_avatar.html" with user=post.author %}
+            </a>
+            <a href="{{post.author.get_absolute_url}}">
+                {{ post.author.shorten_name }}
+            </a>
+        </aside>
+        <div class='body'>
+            <p>{{ post.body }}</p>
+        </div>
+        <div class='published-at'>
+            <a href="{% url 'topics.views.post-view' post.pk %}" class="permalink" title="Трайна връзка">
+                Публикувано преди
+                <time datetime='{{ post.created_at|date:"c"}}'>
+                    {{ post.created_at|timesince }}
+                </time>
+            </a>
+        </div>
+    </article>
+</li>
