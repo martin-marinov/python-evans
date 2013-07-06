@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block CSS %}
-    <link href="/static/announcements.css" media="screen" rel="stylesheet" type="text/css" />
-{% endblock CSS %}
-
 {% block content %}
     <div id="announcements">
         <h1>Новини</h1>
@@ -12,8 +8,8 @@
                 <h2>{{ announcement.title }}</h2>
                 <div class="published-at">
                     Публикувано на
-                    <time datetime={{ announcement.timestamp }} pubdate="pubdate">
-                    23.03.2013 10:17
+                    <time datetime={{ announcement.created_at|date:"c"}} pubdate="pubdate">
+                    {{announcement.created_at|date:"d.m.Y H:i"}}
                     </time>
                 </div>
                 <p>{{ announcement.body }}</p>

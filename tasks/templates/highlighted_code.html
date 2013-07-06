@@ -1,0 +1,9 @@
+{% load pygmentify %}
+
+<div class="hlcode">
+    <div class="syntax">
+        {% with '<pre class="python">'|add:code|add:"</pre>" as rendered_code %}
+            {{rendered_code|pygmentify|safe}}
+        {% endwith %}
+    </div>
+</div>

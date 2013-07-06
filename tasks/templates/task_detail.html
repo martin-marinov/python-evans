@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="task">
+        <h1>{{task.name}}</h1>
+        <p>
+            {% if user.is_staff %}
+                <a href="{% url 'admin:tasks_task_change' task.id %}" class="action">Редактирай</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href="/tasks/1/my_solution" class="action">Предай решение</a>
+            {% endif %}
+            {% if user_solution %}
+                <a href="{% url 'tasks.views.solution-detail' task.pk user_solution.pk %}" class="action">
+                    Коментари към моето решение
+                </a>
+            {% endif %}
+        </p>
+        {% if task.is_closed or user.is_staff %}
+            <p>
+                <a href="/tasks/1/solutions">Предадени решения</a>
+            </p>
+        {% endif %}
+        <dl>
+            <dt>Краен срок:</dt>
+            <dd>{{task.closes_at|date:"d.m.Y H:i"}}</dd>
+            <dt>Точки:</dt>
+            <dd>{{task.max_points}}</dd>
+        </dl>
+        {% if task.is_closed %}
+            <p class="closed">Срокът за предаване на решения е отминал</p>
+        {% endif %}
+        {{task.description}}
+    </div>
+{% endblock %}

@@ -1,14 +1,15 @@
 from django.db import models
 from django.conf import settings
-from django.contrib import admin
 from django.core.urlresolvers import reverse
 
 from topics import REPLIES_PER_PAGE
 
+from markupfield.fields import MarkupField
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    body = models.TextField()
+    body = MarkupField(markup_type='markdown')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     starred = models.BooleanField(default=False)
@@ -43,5 +44,3 @@ class Reply(Post):
     def get_page(self):
         replies_before_this = self.topic.replies.filter(id__lt=self.id).count()
         return replies_before_this // REPLIES_PER_PAGE + 1
-
-admin.site.register(Reply)

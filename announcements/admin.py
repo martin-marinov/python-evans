@@ -1,4 +1,8 @@
 from django.contrib import admin
 from announcements.models import Announcement
 
-admin.site.register(Announcement)
+
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = ('title', 'body', 'created_at')
+
+admin.site.register(Announcement, AnnouncementAdmin)

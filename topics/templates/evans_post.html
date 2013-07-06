@@ -1,4 +1,5 @@
 {% load custom_filters %}
+{% load guardian_tags %}
 <li>
     <article data-starred='{{post|is_starred}}' id='{{post|classname}}_{{ post.pk }}'>
         <aside>
@@ -19,6 +20,12 @@
                     {{ post.created_at|timesince }}
                 </time>
             </a>
+            {% get_obj_perms user for post as "post_perms" %}
+            {% if post|classname == "reply" and post.author == user or user.is_staff %}
+                <a href="{% url 'topics.views.reply.reply-edit' post.topic.pk post.pk %}">Редактирай</a>
+            {% elif post|classname == "topic" and post.author == user or user.is_staff %}
+                <a href="{% url 'topics.views.topic.topic-edit' post.pk %}">Редактирай</a>
+            {% endif %}
         </div>
     </article>
 </li>

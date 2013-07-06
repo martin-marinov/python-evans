@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Решения на {{task.name}}</h1>
+    <p><a href="{% url 'tasks.views.task-detail' task.pk %}" class="back">Към задачата</a></p>
+    <p><strong>{{task.solutions.count}} </strong>решени{{task.solutions.count|pluralize:"е,я"}}</p>
+    <table class="solutions">
+        <thead>
+            <tr>
+                <th class="name">Име</th>
+                <th class="points">Точки</th>
+                <th class="results">Изпълнение</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solution in task.solutions.all %}
+                <tr>
+                    <td class="name">
+                        <a href="/tasks/1/solutions/1">{{solution.user.shorten_name}}</a>
+                    </td>
+                    <td class="points">
+                        {% for i in solution.points|make_list %}
+                            <span class="point"></span>
+                        {% endfor %}
+                    </td>
+                    <td class="results"><span class="lines">, Редове:</span> 21<span class="comments">, Коментари:</span> 2</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

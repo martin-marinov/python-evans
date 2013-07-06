@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h1>Редактиране на "{{topic.title}}"</h1>
+
+<form accept-charset="UTF-8" action="" class="simple_form edit_topic" method="post">
+    {% csrf_token %}
+
+    {% include "evans_CharField.html" with field=form.title|attr:"required:required"|attr:"size:50" %}
+    {% include "evans_EditField.html" with field=form.body|attr:"cols:40"|attr:"rows:20" %}
+    <p class="markdown-explanation">
+        Форумите се форматират с <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a>.
+        Той конвертира текст до HTML. Ползва се много в open source community-то (и в частност, Ruby
+        community-то). Добре е да го знаете. Може да ползвате <a href="http://www.emoji-cheat-sheet.com">Emoji</a>
+        емотикони, ако искате да бъдете по-графични.
+    </p>
+
+    <input class="button" name="commit" type="submit" value="Обнови">
+</form>
+{% endblock content %}

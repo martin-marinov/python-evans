@@ -26,9 +26,12 @@ urlpatterns = patterns('',
                        url(r'^announcements/', AnnouncementsList.as_view(), name='announcements'),
                        url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
                        url(r'^topics/', include('topics.urls')),
+                       url(r'^tasks/', include('tasks.urls')),
                        url(r'^post/(?P<pk>\d+)', PostView.as_view(), name='topics.views.post-view'),
                        url(r'^$', AnnouncementsList.as_view(template_name='index.html'), name='home-page'),
                        )
+
+handler403 = 'python_evans_project.views.custom_permission_denied_view'
 
 if settings.DEBUG:
     urlpatterns += patterns('',

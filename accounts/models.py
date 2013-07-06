@@ -38,7 +38,7 @@ class UserProfileManager(BaseUserManager):
                                 faculty_number=faculty_number,
                                 password=password,
                                 )
-        user.is_admin = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
@@ -53,7 +53,6 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
                               unique=True,
                               db_index=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
     registered_at = models.DateTimeField(auto_now_add=True, editable=False)
     #Custom
     faculty_number = models.PositiveIntegerField(unique=True)
@@ -81,6 +80,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __unicode__(self):
         return self.email
 
+    def get_short_name(self):
+        return self.shorten_name
+
     @property
     def shorten_name(self):
         match = re.search("(?P<first_name>\S+).* (?P<last_name>\S+)$", self.name)
@@ -96,7 +98,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def get_absolute_url(self):
         return reverse('users.views.user-detail', kwargs={'pk': self.pk})
 
-    # Admin required fields
     @property
     def is_staff(self):
-        return self.is_admin
+        # This field designates whether the user can log into the admin section.
+        # Only superusers can :P
+        return self.is_superuser

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div id="my-solution">
+    <h1>{{task.name}} — Моето решение</h1>
+    <a href="{% url 'tasks.views.task-detail' task.pk %}">Обратно към условието</a>
+    {% if task.is_closed %}
+        <p>Крайният срок на тази задача е отминал. Вече не може да предавате решение.</p>
+    {% endif %}
+    <p class="task-guide-notice">
+        Преди да предадете решение, прочетете
+        <a href="/tasks/guide">указанията за предаване на домашни</a>.
+    </p>
+
+    <form accept-charset="UTF-8" action="/tasks/1/my_solution" class="simple_form" method="post">
+        {% csrf_token %}
+        {{form.code.label_tag}}
+        {% if task.is_closed %}
+            {% render_field form.code|attr:"disabled:disabled"|attr:"id:code" %}
+        {% else %}
+            {% render_field form.code|attr:"id:code" %}
+            <div>
+                <input class="button" name="commit" type="submit" value="Изпрати" />
+            </div>
+        {% endif %}
+        
+    </form>
+</div>
+{% endblock %}

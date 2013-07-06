@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load pygmentify %}
+
+{% block CSS %}
+{{block.super}}
+<link href="/static/native.css" media="screen" rel="stylesheet" type="text/css" />
+{% endblock CSS %}
+
+{% block content %}
+<div class="solution">
+<h1>Решение на {{solution.task.name}} от {{solution.user.shorten_name}}</h1>
+<p><a href="/tasks/1/solutions">Обратно към всички решения</a></p>
+<p><a href="{% url 'users.views.user-detail' solution.user.pk %}">Към профила на {{solution.user.shorten_name}}</a></p>
+<div class="results">
+<h2>Резултати</h2>
+<ul>
+<li class="test-points">6 точки от тестове</li>
+<li class="bonus">1 бонус точка</li>
+<li class="total-points">7 точки общо</li>
+</ul>
+</div>
+<h2>Код</h2>
+{% include "highlighted_code.html" with code=solution.code %}
+<h2>История ({{solution.revisions.count}} {{solution.revisions.count|pluralize:"версия,версии"}})</h2>
+    {% for revision in solution.revisions.all %}
+        <article class="revision">
+            <h3>{{solution.user.first_name}} обнови решението на
+                {{revision.created_at|date:"d.m.Y H:i"}} ({{ revision.created_at|timesince }})
+            </h3>
+            <div data-revision-code="" style="display: none;">
+                {% include "highlighted_code.html" with code=revision.code %}
+            </div>
+        </article>
+    {% endfor %}
+</div>
+{% endblock content %}

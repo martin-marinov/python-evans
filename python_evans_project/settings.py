@@ -98,8 +98,6 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-ANONYMOUS_USER_ID = -1
-
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -135,16 +133,15 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django_extensions',
     'widget_tweaks',
-    'guardian',
     'accounts',
     'users',
     'registration',
     'announcements',
     'topics',
+    'tasks',
 )
 
 AUTH_USER_MODEL = 'accounts.UserProfile'
-DJANGORESIZED_DEFAULT_SIZE = [150, 150]
 LOGIN_URL = 'accounts.views.login'
 LOGIN_REDIRECT_URL = 'dashboard'
 
@@ -153,6 +150,7 @@ LOGIN_REDIRECT_URL = 'dashboard'
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -166,7 +164,11 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        # 'console': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.StreamHandler',
+        # },
     },
     'loggers': {
         'django.request': {
@@ -174,6 +176,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        # 'django.db.backends': {
+        #     'level': 'DEBUG',
+        #     'handlers': ['console'],
+        # },
     }
 }
 

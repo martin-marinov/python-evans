@@ -11,4 +11,4 @@ class User(factory.DjangoModelFactory):
 
 
 class AdminUser(User):
-    is_admin = True
+    is_superuser = True
